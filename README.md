@@ -5,9 +5,9 @@
 Beth Emborsky, Brodie Armstrong, Ellen Rud Gentile
 
 ## Intent: 
-Currently most covid-19 predictive models are graphical and at the state level. County level, geographical data is available, but only with historical data. This does not allow state and local govenrments to take proactive measures. 
+Currently most covid-19 predictive models are graphical and at the state level. County level, geographical data is available, but only with historical data. This does not allow state and local governments to take proactive measures. 
 
-The purpose of this project is to create a cloud-based web application with county-level geographical visualization of predictive models of the spread of the disease.  This predictive visualization will allow govenment officials and individuals to take a more pro-active approach as they decide what measures are appropriate for mitigating covid-19 risks.
+The purpose of this project is to create a cloud-based web application with county-level geographical visualization of predictive models of the spread of the disease.  This predictive visualization will allow government officials and individuals to take a more pro-active approach as they decide what measures are appropriate for mitigating covid-19 risks.
 
 ## Summary:
 The web application includes interactive & insightful visualizations demonstrating the geographic, temporal, demographic & human-behavioral factors contributing to covid-19 spread such as:
