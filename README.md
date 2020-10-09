@@ -37,5 +37,6 @@ A back-end PostGres database is created using data from several sources.  SQL qu
 ## Sources:
   - New York Times Covid-19 Data: https://github.com/nytimes/covid-19-data  files: counties.csv, colleges.csv, mask-use-by-county.csv
   - USDA 2013 Rural-urban Continuum Codes: https://www.ers.usda.gov/data-products/rural-urban-continuum-codes/
+  TODO ADD ALL SOURCES
   -
  Based on these factors and historical data, a model was created to determine which counties might become the next hotspots. A full stack, interactive, web application was created and deployed in the cloud to allow users to understand how these factors vary across counties and over time and to visualize at risk areas.  National, State and Local govenrments may use this data to create pro-active policy measures.
