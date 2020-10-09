@@ -1,4 +1,5 @@
-# Covid-19 HotSpots Machine Learning Predictive Model- U.S. County Level
+# Covid-19 HotSpots 
+# Machine Learning Predictive Model- U.S. County Level
 
 ## Team:
 Beth Emborsky, Brodie Armstrong, Ellen Rud Gentile
