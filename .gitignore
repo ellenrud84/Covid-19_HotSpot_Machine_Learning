@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Too large file shared on google docs instead:
+The_Latest_ML.ipynb
