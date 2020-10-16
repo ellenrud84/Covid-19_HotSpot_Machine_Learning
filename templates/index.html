@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <!-- define header -->
+  <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TX Counties Covid-19 Predictions</title>
+
+    <!-- leaflet JS & CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""/>
+
+    <!-- d3 JavaScript -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <!-- our CSS -->
+    <link rel="stylesheet" href="static/css/style.css"/>
+
+    <!-- Bring in our bootstrap stylesheet -->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    </head>
+
+    <body class= "bg-taupe">
+        <!-- container all -->
+        <div class="container-fluid">
+
+            <!-- navbar -->
+            <nav class ="navbar navbar-expand-lg fixed-top navbar-dark bg-green font-taupe">
+                
+                <!-- container for nav bar content -->
+                <div class= "container-fluid">
+                    <a href="index.html" class="navbar-brand mr-auto font-taupe">Texas County-Level Covid-19 Projections</a>
+                    <i class="fab fa-home-square"></i><!--TODO: ENSURE FONTAWESOME ICON LIBRARY IS WORKING-->
+                    
+                    <!-- button to show or hide nav items?? -->
+                    <button class= "navbar-toggler" type="button" data-toggle="collapse" 
+                    data-target="#navbarResponsive" aria-controls="navbarResponsive"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class= "navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <!-- $('.dropdown-toggle').dropdown() -->
+                    <div class= "collapse navbar-collapse" id="navbarResponsive">
+                        <ul class= "navbar-nav ml-auto">
+
+                            <li class="nav-item font-taupe">
+                                <a class="nav-link font-taupe" href="#">Text for dropdown link</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /. container for navbar content -->
+            </nav> 
+            <!-- /. navbar -->
+
+            <br>
+
+            <!-- dropdown county selector row -->
+            <div class= "row">
+
+                <!-- dropdown col -->
+                <div class= "col-lg-4">
+                    <!-- dropdown show -->
+                    <div class="dropdown show">
+                        <!-- header for dropdown -->
+                        <a class="btn btn-primary  bg-lime font-taupe dropdown-toggle rd-corner " 
+                            href="#" role="button" id="dropdownMenuLink" 
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <h4 class= "font-white"> Pick a TX County</h4>
+                        </a>
+                        <!-- /. dropdown header -->
+                        <!-- dropdown menu -->
+                        <div class="dropdown-menu" id="countyDD" aria-labelledby="dropdownMenuLink">
+                            <a class = "dropdown-item font-black" > Harris County</a> 
+                            <a class = "dropdown-item font-black" > Lavaca County</a> 
+                            <a class = "dropdown-item font-black" > Travis County</a> 
+                            <a class = "dropdown-item font-black" > Tarrant County</a> 
+                        </div>
+                        <!-- /. dropdown menu -->
+                    </div> 
+                    <!-- /. Dropdown show -->
+                </div>
+                <!-- /.dropdown col -->
+                <!-- empty space holder -->
+                <div class= "col lg-8"></div>
+                <!-- /. empty space holder -->
+            </div>
+            <!-- /.dropdown county selector row -->
+
+            <br>
+
+            <!-- page header row -->
+            <div class = "row">
+                <!-- page header col -->
+                <div class= "col-lg-12">
+                    <h1 class = "bg-blue font-taupe Header text-center rd-corner">COUNTY XYZ PROJECTIONS</h1>
+                </div>
+                <!-- /.page header col -->
+                
+            </div>
+            <!-- /. page header row -->
+
+            <br>
+
+            <!-- county projections: cases & deaths row  -->
+            <!-- TODO: MAKE Javscript interactive -->
+            <div class= "row">
+
+                <!-- cases & deaths cards column -->
+                <div class = "col-lg-12">
+
+                    <!-- card deck -->
+                    <div class= "card-deck">
+
+                        <!-- cases card-->
+                        <div class = "card rd-corner"><!-- TODO ADD JS TO POPULATE IMAGE -->
+
+                            <img class = "card-img-top rd-corner" id = "cases" src= "..\images\transforms\Cumulative Cases.png" alt=" History & Projection of Covid-19 Cases for Selected County">
+                            <div class= "card-body">
+                                <h5 class= "card-title"> Covid-19 Cases </h5>
+                                <p class = "card-text"> A SARIMAX machine learning model was used to project the number of Covid-19 cases </p>
+                            </div>
+                        </div>
+                        <!-- /. cases card -->
+
+                        <!-- deaths card-->
+                        <div class = "card rd-corner">
+                            <!-- TODO ADD JS TO POPULATE IMAGE -->
+                            <img class = "card-img-top rd-corner" id = "deaths" src= "..\images\transforms\Cumulative Deaths.png" alt=" History & Projection of Covid-19 Deaths for Selected County">
+                            <div class= "card-body">
+                                <h5 class= "card-title"> Covid-19 Deaths </h5>
+                                <p class = "card-text"> A SARIMAX machine learning model was used to project the number of Covid-19 deaths </p>
+                            </div>
+                        </div>
+                        <!-- /. Deaths card -->
+                    </div>
+                    <!-- /. card deck -->
+                </div>
+                <!-- /. col -->
+            </div>
+            <!-- /.cases and death projections -->
+
+            <br>
+
+            <!-- carosel for mobility data header -->
+            <div class= "row">
+                <div class = col-lg-6>
+                    <!-- header for Mobility Data -->
+                    <h3 class = "rd-corner bg-blue font-taupe text-center">County Mobility Data</h3>
+            
+                    <!--  <a href="https://github.com/rtpHarry/Bootstrap3-ShowManySlideOneCarousel">this code sample</a>   -->
+    
+                    <!-- /. mobility carosel Header -->
+                    
+                    <!--Carousel Wrapper-->
+                    <div id="carousel-example-multi" class="carousel slide carousel-multi-item v-2" data-ride="carousel">
+
+                        <!--Controls-->
+                        <div class="controls-bottom">
+                            <a class="btn-floating" href="#carousel-example-multi" data-slide="prev"><i
+                                class="fas fa-chevron-left"></i></a>
+                            <a class="btn-floating" href="#carousel-example-multi" data-slide="next"><i
+                                class="fas fa-chevron-right"></i></a>
+                        </div>
+                        <!--/.Controls-->
+                    
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-multi" data-slide-to="0" class="active"></li>
+                            <li data-target="#carousel-example-multi" data-slide-to="1"></li>
+                            <li data-target="#carousel-example-multi" data-slide-to="2"></li>
+                            <li data-target="#carousel-example-multi" data-slide-to="3"></li>
+                            <li data-target="#carousel-example-multi" data-slide-to="4"></li>
+                            <li data-target="#carousel-example-multi" data-slide-to="5"></li>
+                        </ol>
+                        <!--/.Indicators-->
+                    
+                        <!--Slides-->
+                        <div class="carousel-inner" role="listbox">
+                            
+                            <!--First slide-->
+                            <div class="carousel-item active">
+                        
+                                <div class="col-md-6">
+                                    <div class="card mb-2 rd-corner">
+                                        <img id = "imgWork" 
+                                            class="card-img-top rd-corner"
+                                            src="..\images\transforms\Workplaces Pct Change from Baseline.png"
+                                            alt="Workplace Mobility">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Workplace Mobility</h4>
+                                            <p class="card-text">Percent Change from pre-Covid-19 baseline</p>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                            <!--/.First slide-->
+
+                            
+                            <!-- Second slide -->
+                            <div class = "carousel-item">
+                                <div class="col-md-6">
+                                    <div class="card mb-2 rd-corner">
+                                        <img id = "imgRes" 
+                                            class="card-img-top rd-corner"
+                                            src="..\images\transforms\Residential Pct Change from Baseline.png"
+                                            alt="Residential Mobility">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Residential Mobility</h4>
+                                            <p class="card-text">Percent Change from pre-Covid-19 baseline</p>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                            </div>
+                            <!-- /.Second slide -->
+                        
+                        
+                            <!--Third slide-->
+                            <div class="carousel-item">
+                                    <div class="col-md-6">
+                                        <div class="card mb-2 rd-corner">
+                                            <img id = "imgRetail" 
+                                                class="card-img-top rd-corner"
+                                                src="..\images\transforms\Retail Rec Pct Change from Baseline.png"
+                                                alt="Residential Mobility">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Retail & Recreation Mobility</h4>
+                                                <p class="card-text">Percent Change from pre-Covid-19 baseline</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <!--Third slide-->
+
+                            <!-- Fourth Slide -->
+                            <div class="carousel-item">
+                                    <div class="col-md-5">
+                                        <div class="card mb-2  rd-corner">
+                                            <img id = "imgRetail" 
+                                                class="card-img-top rd-corner"
+                                                src="..\images\transforms\Grocery Pharm Pct Change from Baseline.png"
+                                                alt="Residential Mobility">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Grocery & Pharmacy Mobility</h4>
+                                                <p class="card-text">Percent Change from pre-Covid-19 baseline</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <!--/.Fourth slide-->
+                        
+                            <!--Fifth slide-->
+                            <div class="carousel-item">
+                                
+                                <div class="col-md-5 ">
+                                    <div class="card mb-2 rd-corner">
+                                        <img id = "imgRetail" 
+                                            class="card-img-top rd-corner"
+                                            src="..\images\transforms\Grocery Pharm Pct Change from Baseline.png"
+                                            alt="Residential Mobility">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Parks Mobility</h4>
+                                            <p class="card-text">Percent Change from pre-Covid-19 baseline</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.Fifth slide-->
+
+                            <!--Sixth slide-->
+                            <div class="carousel-item">
+                                <div class="col-md-6  ">
+                                    <div class="card mb-2 rd-corner">
+                                        <img id = "imgRetail" 
+                                            class="card-img-top rd-corner"
+                                            src="..\images\transforms\Grocery Pharm Pct Change from Baseline.png"
+                                            alt="Residential Mobility">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Transit</h4>
+                                            <p class="card-text">Percent Change from pre-Covid-19 baseline</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.Sixth slide-->
+                        
+                            </div>
+                        <!--/.Slides-->
+                    
+                    </div>
+                    <!--/.Carousel Wrapper-->
+                </div>
+                <!-- /.County Mobilty Section -->
+
+                <!-- demogs -->
+                <div class= "col-lg-6">
+                    <div class= "row">
+                        <div class = "col-lg-12">
+                            <h3 class= "rd-corner bg-blue font-taupe text-center"> County Demographics</h3>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class= "row">  
+                        <div class= " col-lg-12 card-deck rd-corner bg-lime">
+                            <br>
+                            <!-- pop. density card --> 
+                            <div class="card  bg-green rd-corner text-center">
+                                <br>
+                                <h5 class="card-header bg-taupe font-green ht-200">Population Density:</h5>
+                                <h1 class="card-title bg-taupe font-green ht-200" id= "density">  ##</h2> <!--TODO: ADD JS TO PULL COUUNTY OF CHOICE DEMOG-->
+                            </div>
+                            <!-- med age card -->
+                            <div class="card bg-green rd-corner text-center">
+                                <br>
+                                <h5 class="card-header bg-taupe font-green ht-200">Median Age:</h5>
+                                <h2 class="card-title bg-taupe font-green ht-200" id= "age">##</h2>
+                            </div>
+                            <!-- percent poverty card -->
+                            <div class="card bg-green rd-corner text-center">
+                                <br>
+                                <h5 class="card-header bg-taupe font-green ht-200">Percent in Poverty:</h5>
+                                <h2 class="card-title bg-taupe font-green ht-200" id= "poverty">#</h2>
+                            </div>
+                            <!-- percent uninsured card -->
+                            <div class="card bg-green rd-corner text-center">
+                                <br>
+                                <h5 class="card-header bg-taupe font-green ht-200">Percent uninsured:</h5>
+                                <h2 class="card-title bg-taupe font-green ht-200"id= "insurance">#</h2>
+                            </div>
+                            <!-- race card -->
+                            <div class="card bg-green rd-corner text-center">
+                                <br>
+                                <h5 class="card-header bg-taupe font-green ht-200">Racial Diversity</h5>
+                                <h2 class="card-title bg-taupe font-green ht-200"id= "race">#</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+         <!-- /. container all  --> 
+            
+        <!-- footer  -->
+        <footer class = "page-footer fixed-bottom navbar-expand-lg bg-green font-taupe" >
+
+                    <ul class= "list-unstyled list-inline text center">
+                        <li class= "list-inline-item">
+                            <p> Creators: Beth Emborsky, Brodie Armstrong, Ellen Rud Gentile</p>
+                        </li>
+                    </ul>
+        </footer>
+        <!-- /. footer -->
+
+        <!-- script links for JS interactivity -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+        <!--INTERNAL JAVASCRIPT FILES -->
+        <script scr= "..\static\js\app.js"></script>
+            
+
+    </body>
+
+</html>
