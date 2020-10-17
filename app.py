@@ -17,9 +17,7 @@ Harris_Demo = pd.read_sql("select * from county_demographics where fips_code=482
 
 Harris_CD  = pd.read_sql("select county_name, a.fips_code, date, cases, deaths from county_daily_data a join county_demographics b on a.fips_code =b.fips_code where a.fips_code =48201",conn)
 
-Harris_View1 = 'select * from public."Harris_Mobility_CD"'
-
-Harris_Mobility_CD = pd.read_sql(Harris_View1,conn)
+Harris_Mobility_CD = pd.read_sql("select county_name, a.* from county_daily_data a join county_demographics b on a.fips_code =b.fips_code where a.fips_code =48201",conn)
 
 
 
