@@ -176,6 +176,7 @@ a {
   color: #1a1a1a;
   text-decoration: none;
   background-color: transparent;
+  display:block;
 }
 
 a:hover {
@@ -10675,7 +10676,7 @@ th {
   padding: 10px 10px;
   /* position:absolute; */
   /* top: 10px; */
-  /* margin-left:20%! important;/* Same side and width as the sidebar */; */
+  /* margin-left:20%! important;/* Same side and width as the sidebar */
   /* margin-right: 5%; */
   /* margin-bottom:70px;
   padding-left:10px; */
@@ -10709,11 +10710,11 @@ a, a:hover, a:focus {
   right:0;
   height: 100vh;
   /* top layer */
-  z-index: 999;
+  /* z-index: 999;
   background: blue;
   color: blue;
   transition: all .3s; 
-}  */
+}  */ 
 
 .overlay{
   display: none;
@@ -10955,4 +10956,8 @@ a[datatoggle="collapse"]{
 
 .carousel-control.right {
     background-image:none;
+}
+
+.w-300{
+  width: 300px;
 }
