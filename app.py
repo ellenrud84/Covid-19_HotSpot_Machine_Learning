@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, inspect
 from flask import Flask, jsonify, render_template
 import pandas as pd
 import json
+
 app = Flask(__name__)
 
 engine = create_engine("postgres://xebpvwdekstjxy:24a096ddb472f7eb9219c48ea89643aaf7a800ef199ba143a88add1036ac8e53@ec2-3-210-178-167.compute-1.amazonaws.com:5432/d5vu678447dkqu", echo=False)
@@ -49,6 +50,9 @@ def Harris1():
 @app.route("/48201_Full")
 def Harris_Full():
     return jsonify(parsed[3])
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
