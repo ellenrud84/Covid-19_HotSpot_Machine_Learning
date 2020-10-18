@@ -1,4 +1,7 @@
 // POPULATE DROPDOWN MENU WITH ALL COUNTIES 
+
+// casesLInk='/'+county
+// mobLink='/'+county+'_Full'
 link= '/Demographics';
 casesLink='/48201';
 mobLink= '48201_Full'
@@ -47,8 +50,6 @@ function optionChanged (){
     buildPlots(county);
 };
 
-
-
 function buildPlots(county){
 
     // populate the header with the correct county
@@ -78,7 +79,6 @@ function buildPlots(county){
         let retailList=[];
         let transitList=[];
         let workList=[];
-        // let fips=filterData[0]['fips_code']
 
         for(i=0; i<filterData.length; i++){
             time_i =filterData[i]
@@ -113,13 +113,6 @@ function buildPlots(county){
         // console.log(`deathsList:${deathsList}`);
            
         // create plots:
-
-        // const mapData={
-        //     type:'scattermapbox'
-        //     mode:
-        //     locationmode:'TX-counties'
-        //     locations:fips
-        // }
 
         const trace1={
             x:datesList,
@@ -218,14 +211,6 @@ function buildPlots(county){
             autosize: true
         };
 
-        const mapLayout={
-            'geo': {
-                'scope': 'texas',
-                'resolution': 50
-            }
-        }
-
-
         Plotly.newPlot('casesPlot', [trace1], layout1);
         Plotly.newPlot('deathsPlot', [trace2], layout2);
         Plotly.newPlot('mobGroc', [trace3], layout3);
@@ -234,8 +219,8 @@ function buildPlots(county){
         Plotly.newPlot('mobRetail', [trace6], layout6);
         Plotly.newPlot('mobTransit', [trace7], layout7);
         Plotly.newPlot('mobWork', [trace8], layout8);
-        // Plotly.newPlot('map',[mapData], mapLayout)
-
+       
+        // TODO: EDIT CODE BELOW FOR RESPONSIVE FIGURES FOR MOBILE
         // make plotly plots responsive to resizing page
         // ref: https://gist.github.com/aerispaha/63bb83208e6728188a4ee701d2b25ad5
         // (function resize(){
@@ -273,39 +258,187 @@ function buildPlots(county){
         // console.log(filterDemogs[0]);
         const demogs=filterDemogs[0];
 
-        const medAge=demogs.Median_Age;
-        // console.log(medAge);
-        document.getElementById("age").innerHTML=`<h3> ${Math.round(medAge)}</h3>`;
-        
+        // // list of all demogs
+        // // POPULATION
+        // "County_Population" 
+        // "Percent_Rural": 67.06,
+        // "Percent_Urban": 32.94, 
         const popDensity=demogs.Population_Density_per_Sq_Mile;
         document.getElementById("density").innerHTML=`<h3> ${Math.round(popDensity)}</h3>`;
+        // "RUCC_2013": 7, 
+        // "RUCC_Description": "Nonmetro - Urban population of 2,500 to 19,999, not adjacent to a metro area 
         
+        // INCOME
+        // "Avg_Annual_Pay"
+        // "Median_Household_Income" 
+        const income=demogs.Per_Capita_Income;
+
+        // RACE
+        const black=demogs.Percent_African_American_Alone;
+        const native=demogs['Percent_American_Indian_&_Alaska_Native_Alone'];
+        const asian= demogs.Percent_Asian_Alone;
+        const hispanic=demogs.Percent_Hispanic;
+        const multiracial =demogs.Percent_Multi_Racial;
+        const pacific_islander= demogs.Percent_Native_Hawaiian_and_Other_Pacific_Islander_Alone;
+        const white= demogs.Percent_White_Alone;
+
+        raceNumbers=[black, native, asian, hispanic, multiracial, pacific_islander, white];
+        
+        const raceData=[{
+            values: raceNumbers,
+            labels:['African Amer.', 'Native Amer.', 'Asian','Hispanic', 'Multiracial', 'Pac. Islander', 'Caucasian'],
+            type: 'pie',
+            hoverinfo: 'label+percent+name',
+            textinfo: "label+percent",
+            sort:false
+        }];
+
+        const raceLayout={
+            height:300,
+            width: 400,
+            margin:{"t":20,"b":0, "l":100, "r":100},
+            showlegend:false
+        };
+
+        Plotly.newPlot('race', raceData, raceLayout)
+
+        
+
+        // AGE GROUP PERCENTAGES
+        const medAge=demogs.Median_Age;
+        // document.getElementById("age").innerHTML=`<h3> ${Math.round(medAge)}</h3>`;
+        const Age_17_and_Under=demogs.Percent_Age_17_and_Under;
+        console.log(`<17, ${Age_17_and_Under}`)
+
+        const Age_65_and_Older=demogs.Percent_Age_65_and_Older;
+        console.log(`>65, ${Age_65_and_Older}`)
+
+        const Age_85_and_Older=demogs.Percent_Age_85_and_Older;
+        console.log(`>85, ${Age_85_and_Older}`)
+
+        const Age_18_to_64=100-Age_17_and_Under-Age_65_and_Older;
+        console.log(`18-64, ${Age_18_to_64}`)
+
+        const Age_65_to_84=Age_65_and_Older-Age_85_and_Older;
+        console.log(`65-84, ${Age_65_to_84}`)
+
+        // create age breakdown chart:
+        ageNumbers=[Age_17_and_Under, Age_18_to_64, Age_65_to_84]
+
+        const ageData=[{
+            values: ageNumbers,
+            labels:['<17', '18-64', '65-84','>85'],
+            type: 'pie',
+            hoverinfo: 'label+percent+name',
+            textinfo: "label+percent",
+            textposition: "inside",
+        }];
+
+        const ageLayout={
+            height:200,
+            width:200,
+            margin:{"t":0,"b":0, "l":0, "r":0},
+            showlegend:false
+        };
+
+        Plotly.newPlot('age', ageData, ageLayout)
+        
+
+        // EDUCATION
+        const college= demogs.Percent_Bachelors_Degree_or_Higher;
+        const HS_and_higher= demogs.Percent_HS_Graduate_or_Higher;
+        const no_HS=100-HS_and_higher;
+        const HS= HS_and_higher-college
+
+        // create education plot
+        edNumbers=[no_HS, HS, college]
+
+        const edData=[{
+            values: edNumbers,
+            labels:['no HS', 'HS Grad', 'College Grad +'],
+            type: 'pie',
+            hoverinfo: 'label+percent+name',
+            textinfo: "label+percent",
+            textposition: "inside",
+        }];
+
+        const edLayout={
+            height:200,
+            width:200,
+            margin:{"t":0,"b":0, "l":0, "r":0},
+            showlegend:false
+        };
+
+        Plotly.newPlot('education', edData, edLayout)
+
+        // INSURANCE
+        // "Percent_Insured": 80.1
+        const uninsured=demogs.Percent_Uninsured;
+        document.getElementById("insurance").innerHTML=`<h3> ${Math.round(uninsured)}</h3>`;
+        
+        // POVERTY
         const poverty=demogs.Percent_Population_in_Poverty;
         document.getElementById("poverty").innerHTML=`<h3> ${Math.round(poverty)}</h3>`;
-        
-        const uninsured=demogs.Percent_Uninsured;
-        document.getElementById("insurance").innerHTML=`<h3> ${Math.round(uninsured)}</h3>`
+        const youth_poverty=demogs.Percent_Population_under_18_in_Poverty;
 
-        const income=demogs.Per_Capita_Income;
+        // // EMPLOYMENT
+        const unemployment=demogs.Percent_Unemployed;
+
+        // // LOCATION:
         const fips=demogs.fips_code;
 
-        const education= demogs.Percent_Bachelors_Degree_or_Higher;
-        document.getElementById("education").innerHTML=`<h3> ${Math.round(education)}</h3>`
+       
 
-        // const age_17younger=demogs.Percent_Age_17_and_Under;
-        // const age_65older=demogs.Percent_Age_65_and_Older;
-        // const age_85older=demogs.Percent_Age_65_and_Older;
+
 
         // const race_Native_American= demogs['Percent_American_Indian_&_Alaska_Native_Alone'];
         // const race_Asian= demogs.Percent_Asian_Alone;
         // const race_Hispance= demogs.Percent_Hispanic;
         // const_race_Multiracial= demogs.Percent_Multi_Racial;
-        // const_race_Pacific_Islander=demogs.Percent_Native_Hawaiian_and_Other_Pacific_Islander_Alone;
-        // const_race_white=demogs.Percent_White_Alone;
+        const_race_Pacific_Islander=demogs.Percent_Native_Hawaiian_and_Other_Pacific_Islander_Alone;
+        const_race_white=demogs.Percent_White_Alone;
+
+
+        // CREATE MAP TO SHOW WHERE SELECTED COUNTY IS
+
+        // Plotly.newPlot(
+        //     'map', 
+        //     [{
+        //         type: 'cholorpleth',
+        //         lat: [46],
+        //         lon: [-74]
+        //     }], 
+        //     {
+        //         title: "Florida Counties",
+        //         height: 600,
+        //         width: 600,
+        //         mapbox: {
+        //             center: {
+        //                 lat: 28,
+        //                 lon: -84
+        //             },
+        //             style: 'light',
+        //             zoom: 8,
+        //             layers: [
+        //                 {
+        //                 sourcetype: 'geojson',
+        //                 source: fips,
+        //                 type: 'fill',
+        //                 color: 'rgba(163,22,19,0.8)'
+        //                 },        
+        //             ]
+        //         }
+        //     }, 
+        //     {
+        //         mapboxAccessToken: 'API_KEY'
+        //     }
+            
+        // );
 
     });
 
-}
+
+};
 
 
 

@@ -10979,6 +10979,7 @@ a[datatoggle="collapse"]{
   display: inline-block;
   position: relative;
   height: fit-content;
+  width:fit-content;
   padding-bottom: 100%; /* aspect ratio */
   vertical-align: top;
   overflow: hidden;
