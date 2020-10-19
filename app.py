@@ -34,9 +34,9 @@ result_full =[]
 parsed_full = []
 
 for county in county_list:
-    queries_cd.append(pd.read_sql(f"select county_name, a.fips_code, date, cases, deaths from county_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name ='{county}'",conn))
-    #queries_full.append(pd.read_sql(f"select county_name, a.* from county_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name ='{county}'",conn))
-    queries_full.append(pd.read_sql(f"with box1 as(select county_name, a.* from county_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name = '{county}'), box2 as(select county_name, a.* from model_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name = '{county}') select a.*, b.lstm_cases_predicted, b.lstm_cases_residuals, b.lstm_deaths_predicted, b.lstm_deaths_residuals, b.sarimax_cases_predicted, b.sarimax_cases_residuals, b.sarimax_cases_forecasted, b.sarimax_deaths_predicted, b.sarimax_deaths_residuals, b.sarimax_deaths_forecasted from box1 a join model_daily_data b on a.fips_code =b.fips_code and a.date = b.date",conn))
+    # queries_cd.append(pd.read_sql(f"select county_name, a.* a join county_demographics b on a.fips_code =b.fips_code where county_name ='{county}'",conn))
+    queries_full.append(pd.read_sql(f"select county_name, a.* from county_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name ='{county}'",conn))
+    queries_cd.append(pd.read_sql(f"select county_name, a.* from model_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name = '{county}'",conn))
 
 
 # loop to jsonify cases and deaths
