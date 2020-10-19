@@ -1,10 +1,7 @@
 // POPULATE DROPDOWN MENU WITH ALL COUNTIES 
-
-// casesLInk='/'+county
-// mobLink='/'+county+'_Full'
-link= '/Demographics';
-casesLink='/48201';
-mobLink= '48201_Full'
+const link= '/Demographics';
+// casesLink='/48201';
+// mobLink= '48201_Full'
 
 d3.json(link).then((Data)=>{
     const data = Data;
@@ -35,7 +32,9 @@ d3.json(link).then((Data)=>{
 
 // initialize with Harris county data
 function init(){
-    buildPlots("Harris");
+    // let casesLink='/Harris';
+    let mobLink='/Harris_Full'
+    buildPlots("Harris", mobLink);
 }
 
 init();
@@ -46,11 +45,15 @@ function optionChanged (){
     const dropDownMenu= d3.select('#selDataset');
     const county = dropDownMenu.property('value');
     // console.log(county);
-    
-    buildPlots(county);
+    let casesLink='/'+county;
+    let mobLink='/'+county+'_Full'
+  
+    buildPlots(county, mobLink);
+
 };
 
-function buildPlots(county){
+
+function buildPlots(county, mobLink){
 
     // populate the header with the correct county
     let cty= county
@@ -323,7 +326,7 @@ function buildPlots(county){
         console.log(`65-84, ${Age_65_to_84}`)
 
         // create age breakdown chart:
-        ageNumbers=[Age_17_and_Under, Age_18_to_64, Age_65_to_84]
+        ageNumbers=[Age_17_and_Under, Age_18_to_64, Age_65_to_84,Age_85_and_Older ]
 
         const ageData=[{
             values: ageNumbers,
@@ -386,59 +389,7 @@ function buildPlots(county){
 
         // // LOCATION:
         const fips=demogs.fips_code;
-
-       
-
-
-
-        // const race_Native_American= demogs['Percent_American_Indian_&_Alaska_Native_Alone'];
-        // const race_Asian= demogs.Percent_Asian_Alone;
-        // const race_Hispance= demogs.Percent_Hispanic;
-        // const_race_Multiracial= demogs.Percent_Multi_Racial;
-        const_race_Pacific_Islander=demogs.Percent_Native_Hawaiian_and_Other_Pacific_Islander_Alone;
-        const_race_white=demogs.Percent_White_Alone;
-
-
-        // CREATE MAP TO SHOW WHERE SELECTED COUNTY IS
-
-        // Plotly.newPlot(
-        //     'map', 
-        //     [{
-        //         type: 'cholorpleth',
-        //         lat: [46],
-        //         lon: [-74]
-        //     }], 
-        //     {
-        //         title: "Florida Counties",
-        //         height: 600,
-        //         width: 600,
-        //         mapbox: {
-        //             center: {
-        //                 lat: 28,
-        //                 lon: -84
-        //             },
-        //             style: 'light',
-        //             zoom: 8,
-        //             layers: [
-        //                 {
-        //                 sourcetype: 'geojson',
-        //                 source: fips,
-        //                 type: 'fill',
-        //                 color: 'rgba(163,22,19,0.8)'
-        //                 },        
-        //             ]
-        //         }
-        //     }, 
-        //     {
-        //         mapboxAccessToken: 'API_KEY'
-        //     }
-            
-        // );
-
     });
 
 
 };
-
-
-
