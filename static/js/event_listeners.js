@@ -35,7 +35,8 @@ function init(){
     // let casesLink='/Harris';
     let mobLink='/Harris_Full'
     let county= "Harris";
-    buildPlots(county, mobLink);
+    let casesLink= '/Harris'
+    buildPlots(county, mobLink, casesLink);
     
 }
 
@@ -49,11 +50,12 @@ function optionChanged (){
     // console.log(county);
 
     let mobLink='/'+county+'_Full';
-    buildPlots(county, mobLink);
+    let casesLink='/'+county
+    buildPlots(county, mobLink,casesLink);
 };
 
 
-function buildPlots(county, mobLink){
+function buildPlots(county, mobLink, casesLink){
 
     // populate the header with the correct county
     let cty= county;
@@ -64,11 +66,11 @@ function buildPlots(county, mobLink){
     let r= document.createTextNode(textHeader);
     q.innerHTML=textHeader;
 
-    // create charts
+    // Pull data from API and create charts
     d3.json(mobLink).then((Data)=>{
-        const data = Data;
-        const entries= Object.values(data);
-        let filterData=entries.filter(i=>i.county_name===county)
+        let data1 = Data;
+        let entries1= Object.values(data1);
+        let filterData1=entries1.filter(i=>i.county_name===county)
         // console.log('Data filtered to county:')
         // console.log(filterData)
         // console.log('entries')
@@ -84,21 +86,9 @@ function buildPlots(county, mobLink){
         let retailList=[];
         let transitList=[];
         let workList=[];
-        let lstm_cases_predicted=[]; 
-        let lstm_cases_residuals=[];
-        let lstm_deaths_predicted=[]; 
-        let lstm_deaths_residuals=[];
-        let sarimax_cases_forecasted=[]; 
-        let sarimax_cases_predicted=[]; 
-        let sarimax_cases_residuals=[]; 
-        let sarimax_deaths_forecasted=[];
-        let sarimax_deaths_predicted=[];
-        let sarimax_deaths_residuals=[];
 
-        for(i=0; i<filterData.length; i++){
-            time_i =filterData[i]
-            // console.log(time_i);
-
+        for(i=0; i<filterData1.length; i++){
+            time_i =filterData1[i]
             date=new Date(time_i['date']);
             cases=time_i['cases'];
             deaths=time_i['deaths'];
@@ -108,24 +98,12 @@ function buildPlots(county, mobLink){
             mob_retail=time_i['retail_and_recreation_percent_change_from_baseline'];
             mob_transit=time_i['transit_stations_percent_change_from_baseline'];
             mob_work=time_i['workplaces_percent_change_from_baseline'];
-            lstm_cases_pred=time_i['lstm_cases_predicted']; 
-            lstm_cases_resid=time_i['lstm_cases_residuals'];
-            lstm_deaths_pred=time_i['lstm_deaths_predicted']; 
-            lstm_deaths_resid=time_i['lstm_deaths_residuals'];
-            sarimax_cases_fore=time_i['sarimax_cases_forecasted']; 
-            sarimax_cases_pred=time_i['sarimax_cases_predicted']; 
-            sarimax_cases_resid=time_i['sarimax_cases_residuals']; 
-            sarimax_deaths_fore=time_i['sarimax_deaths_forecasted'];
-            sarimax_deaths_pred=time_i['sarimax_deaths_predicted'];
-            sarimax_deaths_resid=time_i['sarimax_deaths_residuals'];
 
-            
             // console.log(`date:${date}`);
             // console.log(`cases:${cases}`);
             // console.log(`deaths:${deaths}`);
             
             datesList.push(date);
-            console.log(datesList);
             casesList.push(cases);
             deathsList.push(deaths);
             grocList.push(mob_groc);
@@ -134,24 +112,10 @@ function buildPlots(county, mobLink){
             retailList.push(mob_retail);
             transitList.push(mob_transit);
             workList.push(mob_work);
-            lstm_cases_predicted.push(lstm_cases_pred); 
-            lstm_cases_residuals.push(lstm_cases_resid); 
-            lstm_deaths_predicted.push(lstm_deaths_pred);  
-            lstm_deaths_residuals.push(lstm_deaths_resid); 
-            sarimax_cases_forecasted.push(sarimax_cases_fore);  
-            sarimax_cases_predicted.push(sarimax_cases_pred); 
-            sarimax_cases_residuals.push(sarimax_cases_resid); 
-            sarimax_deaths_forecasted.push(sarimax_deaths_fore); 
-            sarimax_deaths_predicted.push(sarimax_deaths_pred); 
-            sarimax_deaths_residuals.push(sarimax_deaths_resid); 
-
         };
-        // console.log(`datesList:${datesList}`);
-        // console.log(`casesList:${casesList}`);
-        // console.log(`deathsList:${deathsList}`);
+       
            
-        // create plots:
-
+        // define initial cases, deaths and mobility plots parameters:
         const trace1={
             x:datesList,
             y:casesList,
@@ -210,57 +174,12 @@ function buildPlots(county, mobLink){
             line: {color:'black'}
         };
 
-        const trace9={
-            x:datesList,
-            y:lstm_cases_predicted,
-            mode:'lines',
-            line: {color:'blue'},
-            name:"LSTM Predicted Cases"
-        };
-
-        const trace10={
-            x:datesList,
-            y:sarimax_cases_predicted,
-            mode:'lines',
-            line: {color:'purple'},
-            name:'SARIMA Predicted Cases'
-        };
-        const trace11={
-            x:datesList,
-            y:sarimax_cases_forecasted,
-            mode:'lines',
-            line: {color:'red'},
-            name:'SARIMA Forecasted Cases'
-        };
-
-        const trace12={
-            x:datesList,
-            y:lstm_deaths_predicted,
-            type:'line',
-            line: {color:'blue'},
-            name:"LSTM Predicted Cases"
-        };
-
-        const trace13={
-            x:datesList,
-            y:sarimax_deaths_predicted,
-            type:'line',
-            line: {color:'purple'},
-            name:'SARIMA Predicted Deaths'
-        };
-        const trace14={
-            x:datesList,
-            y:sarimax_deaths_forecasted,
-            type:'line',
-            line: {color:'red'},
-            name:'SARIMA Forecasted Deaths'
-        };
-      
         const layout1={
             yaxis:{title:'Cases', automargin:true},
             xaxis:{title:'Date'},
             autosize: true
         };
+
         const layout2={
             yaxis:{title:'Deaths', automargin:true},
             xaxis:{title:'Date'},
@@ -272,77 +191,154 @@ function buildPlots(county, mobLink){
             xaxis:{title:'Date'},
             autosize: true
         };
+
         const layout4={
             yaxis:{title:'% Change Mobility', automargin:true},
             xaxis:{title:'Date'},
             autosize: true
         };
+
         const layout5={
             yaxis:{title:'% Change Mobility', automargin:true},
             xaxis:{title:'Date'},
             autosize: true
         };
+
         const layout6={
             yaxis:{title:'% Change Mobility', automargin:true},
             xaxis:{title:'Date'},
             autosize: true
         };
+
         const layout7={
             yaxis:{title:'% Change Mobility', automargin:true},
             xaxis:{title:'Date'},
             autosize: true
         };
+
         const layout8={
             yaxis:{title:'% Change Mobility', automargin:true},
             xaxis:{title:'Date'},
             autosize: true
         };
 
-        Plotly.newPlot('casesPlot', [trace1], layout1);
-        Plotly.plot('casesPlot', [trace9], layout1);
-        Plotly.plot('casesPlot', [trace10], layout1);
-        // Plotly.plot('casesPlot', [trace11], layout1);
+        d3.json(casesLink).then((Data)=>{
+            let data2 = Data;
+            let entries2= Object.values(data2);
+            let filterData2=entries2.filter(i=>i.county_name===county);
 
-        Plotly.newPlot('deathsPlot', [trace2], layout2);
-        Plotly.plot('deathsPlot', [trace12], layout2);
-        Plotly.plot('deathsPlot', [trace13], layout2);
-        Plotly.plot('deathsPlot', [trace14], layout2);
+            let i;
+            let datesList2=[]
+            let lstm_cases_predicted=[]; 
+            let lstm_cases_residuals=[];
+            let lstm_deaths_predicted=[]; 
+            let lstm_deaths_residuals=[];
+            let sarimax_cases_forecasted=[]; 
+            let sarimax_cases_predicted=[]; 
+            let sarimax_cases_residuals=[]; 
+            let sarimax_deaths_forecasted=[];
+            let sarimax_deaths_predicted=[];
+            let sarimax_deaths_residuals=[];
+
+            for(i=0; i<filterData2.length; i++){
+                time_i =filterData2[i]
+                // console.log(time_i);
+                date2=new Date(time_i['date']);
+                lstm_cases_pred=time_i['lstm_cases_predicted']; 
+                lstm_cases_resid=time_i['lstm_cases_residuals'];
+                lstm_deaths_pred=time_i['lstm_deaths_predicted']; 
+                lstm_deaths_resid=time_i['lstm_deaths_residuals'];
+                sarimax_cases_fore=time_i['sarimax_cases_forecasted']; 
+                sarimax_cases_pred=time_i['sarimax_cases_predicted']; 
+                sarimax_cases_resid=time_i['sarimax_cases_residuals']; 
+                sarimax_deaths_fore=time_i['sarimax_deaths_forecasted'];
+                sarimax_deaths_pred=time_i['sarimax_deaths_predicted'];
+                sarimax_deaths_resid=time_i['sarimax_deaths_residuals'];
+
+                datesList2.push(date2);
+                lstm_cases_predicted.push(lstm_cases_pred); 
+                lstm_cases_residuals.push(lstm_cases_resid); 
+                lstm_deaths_predicted.push(lstm_deaths_pred);  
+                lstm_deaths_residuals.push(lstm_deaths_resid); 
+                sarimax_cases_forecasted.push(sarimax_cases_fore);  
+                sarimax_cases_predicted.push(sarimax_cases_pred); 
+                sarimax_cases_residuals.push(sarimax_cases_resid); 
+                sarimax_deaths_forecasted.push(sarimax_deaths_fore); 
+                sarimax_deaths_predicted.push(sarimax_deaths_pred); 
+                sarimax_deaths_residuals.push(sarimax_deaths_resid); 
+                console.log(`datesList:${datesList}`);
+                console.log(`lstm_cases_predicted:${lstm_cases_predicted}`);
+                console.log(`sarimax_cases_predicted:${sarimax_cases_predicted}`);
+            };
+
+            
+
+            // define model prediction plot parameters
+            const trace9={
+                x:datesList2,
+                y:lstm_cases_predicted,
+                mode:'lines',
+                line: {color:'blue'},
+                name:"LSTM Predicted Cases"
+            };
+
+            const trace10={
+                x:datesList2,
+                y:sarimax_cases_predicted,
+                mode:'lines',
+                line: {color:'purple'},
+                name:'SARIMA Predicted Cases'
+            };
+            const trace11={
+                x:datesList2,
+                y:sarimax_cases_forecasted,
+                mode:'lines',
+                line: {color:'red'},
+                name:'SARIMA Forecasted Cases'
+            };
+
+            const trace12={
+                x:datesList2,
+                y:lstm_deaths_predicted,
+                type:'line',
+                line: {color:'blue'},
+                name:"LSTM Predicted Cases"
+            };
+
+            const trace13={
+                x:datesList2,
+                y:sarimax_deaths_predicted,
+                type:'line',
+                line: {color:'purple'},
+                name:'SARIMA Predicted Deaths'
+            };
+            const trace14={
+                x:datesList2,
+                y:sarimax_deaths_forecasted,
+                type:'line',
+                line: {color:'red'},
+                name:'SARIMA Forecasted Deaths'
+            };
+        
+            Plotly.newPlot('casesPlot', [trace1], layout1);
+            Plotly.plot('casesPlot', [trace9], layout1);
+            Plotly.plot('casesPlot', [trace10], layout1);
+            Plotly.plot('casesPlot', [trace11], layout1);
+
+            Plotly.newPlot('deathsPlot', [trace2], layout2);
+            Plotly.plot('deathsPlot', [trace12], layout2);
+            Plotly.plot('deathsPlot', [trace13], layout2);
+            Plotly.plot('deathsPlot', [trace14], layout2);
 
 
-        Plotly.newPlot('mobGroc', [trace3], layout3);
-        Plotly.newPlot('mobParks', [trace4], layout4);
-        Plotly.newPlot('mobRes', [trace5], layout5);
-        Plotly.newPlot('mobRetail', [trace6], layout6);
-        Plotly.newPlot('mobTransit', [trace7], layout7);
-        Plotly.newPlot('mobWork', [trace8], layout8);
+            Plotly.newPlot('mobGroc', [trace3], layout3);
+            Plotly.newPlot('mobParks', [trace4], layout4);
+            Plotly.newPlot('mobRes', [trace5], layout5);
+            Plotly.newPlot('mobRetail', [trace6], layout6);
+            Plotly.newPlot('mobTransit', [trace7], layout7);
+            Plotly.newPlot('mobWork', [trace8], layout8);
+        });  
        
-        // TODO: EDIT CODE BELOW FOR RESPONSIVE FIGURES FOR MOBILE
-        // make plotly plots responsive to resizing page
-        // ref: https://gist.github.com/aerispaha/63bb83208e6728188a4ee701d2b25ad5
-        // (function resize(){
-        //     var d3 = Plotly.d3;
-        //     var WIDTH_IN_PERCENT_OF_PARENT = 90,
-        //         HEIGHT_IN_PERCENT_OF_PARENT = 80;
-            
-        //     var gd3 = d3.selectAll(".responsive-plot")
-        //         .style({
-        //           width: WIDTH_IN_PERCENT_OF_PARENT + '%',
-        //           'margin-left': (100 - WIDTH_IN_PERCENT_OF_PARENT) / 2 + '%',
-                  
-        //           height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
-        //           'margin-top': (100 - HEIGHT_IN_PERCENT_OF_PARENT) / 2 + 'vh',
-
-        //           'border-radius': '20px'
-        //         });
-          
-        //     var nodes_to_resize = gd3[0]; //not sure why but the goods are within a nested array
-        //     window.onresize = function() {
-        //       for (var i = 0; i < nodes_to_resize.length; i++) {
-        //         Plotly.Plots.resize(nodes_to_resize[i]);
-        //       }
-        //     };
-            
-        //   })();
     });
 
     // pull demogs for that county:
