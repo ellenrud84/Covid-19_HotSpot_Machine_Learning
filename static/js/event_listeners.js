@@ -34,7 +34,9 @@ d3.json(link).then((Data)=>{
 function init(){
     // let casesLink='/Harris';
     let mobLink='/Harris_Full'
-    buildPlots("Harris", mobLink);
+    let county= "Harris";
+    buildPlots(county, mobLink);
+    
 }
 
 init();
@@ -45,22 +47,22 @@ function optionChanged (){
     const dropDownMenu= d3.select('#selDataset');
     const county = dropDownMenu.property('value');
     // console.log(county);
-    let casesLink='/'+county;
-    let mobLink='/'+county+'_Full'
-  
-    buildPlots(county, mobLink);
 
+    let mobLink='/'+county+'_Full';
+    buildPlots(county, mobLink);
 };
 
 
 function buildPlots(county, mobLink){
 
     // populate the header with the correct county
-    let cty= county
-    console.log(`cty: ${cty}`)
-    let textHeader= `${cty} County Historical Data and Projections`;
-    console.log(`textHeader: ${textHeader}`)
-    d3.select("h1.myClass").append("span").text=textHeader
+    let cty= county;
+    console.log(`cty: ${cty}`);
+    let textHeader= `${cty} County`;
+    console.log(`textHeader: ${textHeader}`);
+    let q= document.getElementById('countyHeader');
+    let r= document.createTextNode(textHeader);
+    q.innerHTML=textHeader;
 
     // create charts
     d3.json(mobLink).then((Data)=>{
@@ -82,6 +84,16 @@ function buildPlots(county, mobLink){
         let retailList=[];
         let transitList=[];
         let workList=[];
+        let lstm_cases_predicted=[]; 
+        let lstm_cases_residuals=[];
+        let lstm_deaths_predicted=[]; 
+        let lstm_deaths_residuals=[];
+        let sarimax_cases_forecasted=[]; 
+        let sarimax_cases_predicted=[]; 
+        let sarimax_cases_residuals=[]; 
+        let sarimax_deaths_forecasted=[];
+        let sarimax_deaths_predicted=[];
+        let sarimax_deaths_residuals=[];
 
         for(i=0; i<filterData.length; i++){
             time_i =filterData[i]
@@ -92,16 +104,28 @@ function buildPlots(county, mobLink){
             deaths=time_i['deaths'];
             mob_groc=time_i['grocery_and_pharmacy_percent_change_from_baseline'];
             mob_parks=time_i["parks_percent_change_from_baseline"];
-            mob_res=time_i['residential_percent_change_from_baseline']
-            mob_retail=time_i['retail_and_recreation_percent_change_from_baseline']
-            mob_transit=time_i['transit_stations_percent_change_from_baseline']
-            mob_work=time_i['workplaces_percent_change_from_baseline']
+            mob_res=time_i['residential_percent_change_from_baseline'];
+            mob_retail=time_i['retail_and_recreation_percent_change_from_baseline'];
+            mob_transit=time_i['transit_stations_percent_change_from_baseline'];
+            mob_work=time_i['workplaces_percent_change_from_baseline'];
+            lstm_cases_pred=time_i['lstm_cases_predicted']; 
+            lstm_cases_resid=time_i['lstm_cases_residuals'];
+            lstm_deaths_pred=time_i['lstm_deaths_predicted']; 
+            lstm_deaths_resid=time_i['lstm_deaths_residuals'];
+            sarimax_cases_fore=time_i['sarimax_cases_forecasted']; 
+            sarimax_cases_pred=time_i['sarimax_cases_predicted']; 
+            sarimax_cases_resid=time_i['sarimax_cases_residuals']; 
+            sarimax_deaths_fore=time_i['sarimax_deaths_forecasted'];
+            sarimax_deaths_pred=time_i['sarimax_deaths_predicted'];
+            sarimax_deaths_resid=time_i['sarimax_deaths_residuals'];
+
             
             // console.log(`date:${date}`);
             // console.log(`cases:${cases}`);
             // console.log(`deaths:${deaths}`);
             
             datesList.push(date);
+            console.log(datesList);
             casesList.push(cases);
             deathsList.push(deaths);
             grocList.push(mob_groc);
@@ -110,6 +134,17 @@ function buildPlots(county, mobLink){
             retailList.push(mob_retail);
             transitList.push(mob_transit);
             workList.push(mob_work);
+            lstm_cases_predicted.push(lstm_cases_pred); 
+            lstm_cases_residuals.push(lstm_cases_resid); 
+            lstm_deaths_predicted.push(lstm_deaths_pred);  
+            lstm_deaths_residuals.push(lstm_deaths_resid); 
+            sarimax_cases_forecasted.push(sarimax_cases_fore);  
+            sarimax_cases_predicted.push(sarimax_cases_pred); 
+            sarimax_cases_residuals.push(sarimax_cases_resid); 
+            sarimax_deaths_forecasted.push(sarimax_deaths_fore); 
+            sarimax_deaths_predicted.push(sarimax_deaths_pred); 
+            sarimax_deaths_residuals.push(sarimax_deaths_resid); 
+
         };
         // console.log(`datesList:${datesList}`);
         // console.log(`casesList:${casesList}`);
@@ -120,14 +155,17 @@ function buildPlots(county, mobLink){
         const trace1={
             x:datesList,
             y:casesList,
-            type:'line'
+            mode:'lines',
+            line:{color:'black'},
+            name:'Observed Cases'
         };
 
         const trace2={
             x:datesList,
             y:deathsList,
             type:'line',
-            line:{color:'red'}
+            line:{color:'black'},
+            name:'Observed Deaths'
         };
 
         const trace3={
@@ -172,6 +210,52 @@ function buildPlots(county, mobLink){
             line: {color:'black'}
         };
 
+        const trace9={
+            x:datesList,
+            y:lstm_cases_predicted,
+            mode:'lines',
+            line: {color:'blue'},
+            name:"LSTM Predicted Cases"
+        };
+
+        const trace10={
+            x:datesList,
+            y:sarimax_cases_predicted,
+            mode:'lines',
+            line: {color:'purple'},
+            name:'SARIMA Predicted Cases'
+        };
+        const trace11={
+            x:datesList,
+            y:sarimax_cases_forecasted,
+            mode:'lines',
+            line: {color:'red'},
+            name:'SARIMA Forecasted Cases'
+        };
+
+        const trace12={
+            x:datesList,
+            y:lstm_deaths_predicted,
+            type:'line',
+            line: {color:'blue'},
+            name:"LSTM Predicted Cases"
+        };
+
+        const trace13={
+            x:datesList,
+            y:sarimax_deaths_predicted,
+            type:'line',
+            line: {color:'purple'},
+            name:'SARIMA Predicted Deaths'
+        };
+        const trace14={
+            x:datesList,
+            y:sarimax_deaths_forecasted,
+            type:'line',
+            line: {color:'red'},
+            name:'SARIMA Forecasted Deaths'
+        };
+      
         const layout1={
             yaxis:{title:'Cases', automargin:true},
             xaxis:{title:'Date'},
@@ -215,7 +299,16 @@ function buildPlots(county, mobLink){
         };
 
         Plotly.newPlot('casesPlot', [trace1], layout1);
+        Plotly.plot('casesPlot', [trace9], layout1);
+        Plotly.plot('casesPlot', [trace10], layout1);
+        // Plotly.plot('casesPlot', [trace11], layout1);
+
         Plotly.newPlot('deathsPlot', [trace2], layout2);
+        Plotly.plot('deathsPlot', [trace12], layout2);
+        Plotly.plot('deathsPlot', [trace13], layout2);
+        Plotly.plot('deathsPlot', [trace14], layout2);
+
+
         Plotly.newPlot('mobGroc', [trace3], layout3);
         Plotly.newPlot('mobParks', [trace4], layout4);
         Plotly.newPlot('mobRes', [trace5], layout5);
