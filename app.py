@@ -36,7 +36,7 @@ parsed_full = []
 for county in county_list:
     # queries_cd.append(pd.read_sql(f"select county_name, a.* a join county_demographics b on a.fips_code =b.fips_code where county_name ='{county}'",conn))
     queries_full.append(pd.read_sql(f"select county_name, a.* from county_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name ='{county}'",conn))
-    queries_cd.append(pd.read_sql(f"select county_name, a.* from model_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name = '{county}'",conn))
+    # queries_cd.append(pd.read_sql(f"select county_name, a.* from model_daily_data a join county_demographics b on a.fips_code =b.fips_code where county_name = '{county}'",conn))
 
 
 # loop to jsonify cases and deaths
