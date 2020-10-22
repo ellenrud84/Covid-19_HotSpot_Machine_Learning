@@ -45,7 +45,8 @@ Of our data sources, case/ death count and mobility varied daily, while Demograp
 
 #### Stationarizing the Timeseries Data:
 The initial raw data for cases varied by county but overall showed an exponential trend (as expected for a spreading disease):
-TODO: ADD Raw Data pictures here
+##### Raw Case Data for all TX counties:
+[![Cases Raw Data All Counties](../i.gyazo.com/d2fb1585068495ee5c9c17971eefa4b1.gif)
 
 TODO:Illustrate examples of stationarizing the data.
 
